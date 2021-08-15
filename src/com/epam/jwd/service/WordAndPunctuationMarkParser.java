@@ -28,10 +28,10 @@ public class WordAndPunctuationMarkParser extends Parser {
              end != BreakIterator.DONE;
              start = end, end = wordIterator.next()) {
             String word = text.substring(start, end);
-            Matcher punctuatuinMatcher = punctuationPattern.matcher(word);
+            Matcher punctuationMatcher = punctuationPattern.matcher(word);
             Matcher numberMatcher = numberPattern.matcher(word);
             Matcher spaceMatcher = spacePattern.matcher(word);
-            if (punctuatuinMatcher.find()) {
+            if (punctuationMatcher.find()) {
                 list.add(new PunctuationMark(word));
             } else if (numberMatcher.find()) {
                 list.add(new Number(word));

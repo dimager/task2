@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ParagraphAndCodeBlcokParser extends Parser {
+public class ParagraphAndCodeBlockParser extends Parser {
     private final Pattern paragraphAndCodeBlockPattern = Pattern.compile("((^.+?\\{([\\s\\S]+?)^\\})|^.+=.+;|^.+)", Pattern.MULTILINE);
     private final Pattern codeBlockPattern = Pattern.compile("((^.+?\\{([\\s\\S]+?)^\\})|^.+=.+;|^\\S+;)", Pattern.MULTILINE);
-    private List<Text> textElementList = new LinkedList();
+    private List<Text> textElementList = new LinkedList<>();
 
     @Override
     public List<Text> split(String text) {
@@ -25,7 +25,7 @@ public class ParagraphAndCodeBlcokParser extends Parser {
             } else {
                 linkWith(new SentenceParser());
                 Paragraph paragraph = new Paragraph();
-                splitNext(splitElement).forEach(element -> paragraph.add(element));
+                splitNext(splitElement).forEach(paragraph::add);
                 textElementList.add(paragraph);
             }
 

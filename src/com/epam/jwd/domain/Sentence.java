@@ -22,11 +22,11 @@ public class Sentence extends BaseText {
         return builder.toString();
     }
 
-    public int getSentenceLenght(){
+    public int getSentenceLength(){
         return sentenceElements.size();
     }
 
-    public int getNumberOfWordsInSentense(){
+    public int getNumberOfWordsInSentence(){
         return  getSentenceWordsList().size();
     }
 
@@ -44,9 +44,8 @@ public class Sentence extends BaseText {
     }
 
     public boolean isContainWord(String word){
-        Iterator<Text> wordIterator = getSentenceWordsList().iterator();
-        while (wordIterator.hasNext()){
-            if (wordIterator.next().getValue().toLowerCase(Locale.ROOT).contains(word)){
+        for (Text text : getSentenceWordsList()) {
+            if (text.getValue().toLowerCase(Locale.ROOT).contains(word)) {
                 return true;
             }
         }

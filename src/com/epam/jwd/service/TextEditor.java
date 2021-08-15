@@ -15,11 +15,11 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class TextEditor {
-    private final String specialwords = "of the in by on at by a up an to it as from for are is";
+    private final String specialWords = "of the in by on at by a up an to it as from for are is";
     private List<Text> fullText = new LinkedList<>();
     private List<Sentence> allSentences = new LinkedList<>();
-    private HashSet<Text> allWords = new HashSet();
-    private HashSet<String> allWordsString = new HashSet();
+    private HashSet<Text> allWords = new HashSet<>();
+    private HashSet<String> allWordsString = new HashSet<>();
 
     public void loadElements(List<Text> list) {
         this.fullText = list;
@@ -28,7 +28,7 @@ public class TextEditor {
     }
 
     public void printText() {
-        fullText.forEach(text -> text.print());
+        fullText.forEach(Text::print);
     }
 
     private void loadAllSentences() {
@@ -41,15 +41,15 @@ public class TextEditor {
     }
 
     private void loadAllWords() {
-        for (Text sentence : allSentences) {
-            allWords.addAll(((Sentence) sentence).getSentenceWordsList());
+        for (Sentence sentence : allSentences) {
+            allWords.addAll(sentence.getSentenceWordsList());
         }
         allWordsString.addAll(allWords.stream().map(Text::getValue).map(String::toLowerCase).collect(Collectors.toList()));
     }
 
     public void sortSentences(Comparator<Sentence> textComparator) {
         //allSentences.stream().sorted(textComparator).forEach(text -> System.out.println(text.getSentenceString()));
-        allSentences.stream().sorted(textComparator).forEach(text -> text.print());
+        allSentences.stream().sorted(textComparator).forEach(Sentence::print);
     }
 
     public List<Sentence> getAllSentences() {
@@ -62,22 +62,22 @@ public class TextEditor {
 
     public void Task1() {
         HashMap<String, Sentence> hashMap = new HashMap<>();
-        int hit = 0;
+        int hit;
         int max = 0;
         for (String s : allWordsString) {
-            if (!specialwords.contains(s) & s.length() > 1) {
-                for (Text sentence : allSentences) {
+            if (!specialWords.contains(s) & s.length() > 1) {
+                for (Sentence sentence : allSentences) {
                     hit = 0;
-                    for (Text sentenceWord : ((Sentence) sentence).getSentenceWordsList()) {
+                    for (Text sentenceWord : sentence.getSentenceWordsList()) {
                         if (sentenceWord.getValue().toLowerCase(Locale.ROOT).equals(s.toLowerCase(Locale.ROOT))) {
                             hit++;
                             if (hit > 0) {
                                 if (max < hit) {
                                     max = hit;
                                     hashMap.clear();
-                                    hashMap.put(s, (Sentence) sentence);
+                                    hashMap.put(s, sentence);
                                 } else if (max == hit) {
-                                    hashMap.put(s, (Sentence) sentence);
+                                    hashMap.put(s, sentence);
                                 }
                             }
                         }
@@ -92,15 +92,15 @@ public class TextEditor {
     public void Task1a() {
         List<Sentence> temporaryList = new LinkedList<>();
         List<Sentence> sentencesWithWord = new LinkedList<>();
-        String word = new String();
-        String s = new String();
+        String word = "";
+        String s;
         Iterator<String> wordsIterator = allWordsString.iterator();
         while (wordsIterator.hasNext()) {
             s = wordsIterator.next();
             Iterator<Sentence> sentenceIterator = allSentences.iterator();
             while (sentenceIterator.hasNext()) {
                 Sentence checkSentence = sentenceIterator.next();
-                if (checkSentence.isContainWord(s) & !specialwords.contains(s) & s.length() > 1) {
+                if (checkSentence.isContainWord(s) & !specialWords.contains(s) & s.length() > 1) {
                     temporaryList.add(checkSentence);
                 }
             }
@@ -148,12 +148,10 @@ public class TextEditor {
                 while (sentenceIterator.hasNext()) {
                     Sentence sentence = sentenceIterator.next();
                     Word firstWord = (Word) sentence.getSentenceWordsList().get(0);
-                    Word lastWord = (Word) sentence.getSentenceWordsList().get(sentence.getNumberOfWordsInSentense() - 1);
+                    Word lastWord = (Word) sentence.getSentenceWordsList().get(sentence.getNumberOfWordsInSentence() - 1);
                     sentence.swapFirstLastWord(firstWord, lastWord);
                     //  sentence.print();
                 }
-            } else {
-                // text.print();
             }
         }
     }

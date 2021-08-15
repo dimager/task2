@@ -8,7 +8,7 @@ public class Paragraph extends BaseText {
 
     @Override
     public void print() {
-        sentences.forEach(sentence -> sentence.print());
+        sentences.forEach(Sentence::print);
         System.out.println();
     }
 
@@ -16,11 +16,11 @@ public class Paragraph extends BaseText {
         sentences.add((Sentence) sentence);
     }
 
-   public void remove(Text sentence) {
+    public void remove(Text sentence) {
         sentences.remove((Sentence) sentence);
     }
 
-   public List<Sentence> getSentencesFromParagraph() {
+    public List<Sentence> getSentencesFromParagraph() {
         return sentences;
     }
 
