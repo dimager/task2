@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 public class ReadFile {
     public static String readUsingBufferedReader(String fileName) {
         try {
-            return new String(Files.readAllBytes(Paths.get("file1.txt")), StandardCharsets.UTF_8);
+            return new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }

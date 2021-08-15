@@ -8,7 +8,7 @@ public class Paragraph extends BaseText {
 
     @Override
     public void print() {
-        sentences.forEach(sentence -> sentence.print());
+        sentences.forEach(Sentence::print);
         System.out.println();
     }
 

@@ -20,7 +20,7 @@ public class SentenceParser extends Parser {
              start = end, end = sentenceIterator.next()) {
             linkWith(new WordAndPunctuationMarkParser());
             Sentence sentence = new Sentence();
-            splitNext(text.substring(start, end)).forEach(text1 -> sentence.add(text1));
+            splitNext(text.substring(start, end)).forEach(sentence::add);
             list.add(sentence);
         }
         return list;
