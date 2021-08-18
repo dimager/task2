@@ -1,4 +1,4 @@
-package com.epam.jwd.comparators;
+package com.epam.jwd.comparator;
 
 import com.epam.jwd.domain.Text;
 

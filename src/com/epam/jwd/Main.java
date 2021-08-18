@@ -1,30 +1,41 @@
 package com.epam.jwd;
 
-import com.epam.jwd.comparators.NumberOfWordsInSentenceComparator;
-import com.epam.jwd.domain.Text;
+import com.epam.jwd.comparator.NumberOfWordsInSentenceComparator;
+import com.epam.jwd.service.FunctionWordsReader;
 import com.epam.jwd.service.ParagraphAndCodeBlockParser;
 import com.epam.jwd.service.Parser;
-import com.epam.jwd.service.ReadFile;
+import com.epam.jwd.service.FileReader;
 import com.epam.jwd.service.TextEditor;
-
-import java.util.List;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 
 public class Main {
+    public static Logger logger = LogManager.getLogger();
+
     public static void main(String[] args) {
         TextEditor textEditor = new TextEditor();
+//        Configurator.setLevel("com.epam.jwd",Level.DEBUG);
+        Configurator.setLevel("com.epam.jwd",Level.INFO);
         Parser parser = new ParagraphAndCodeBlockParser();
-        List<Text> list = parser.split(ReadFile.readUsingBufferedReader("file1.txt"));
-        textEditor.loadElements(list);
-        //textEditor.getAllWords().forEach(x -> System.out.println(x));
-       //textEditor.getAllWords().stream().sorted().forEach(x-> System.out.println(x));
+        FunctionWordsReader.loadFunctionWordsFromFile("functionwords.txt");
+        textEditor.loadElements(parser.split(FileReader.readTextFile("file1.txt")));
 
-      //  textEditor.getAllWords().stream().sorted().collect(Collectors.toList());
+        // functionality 1
+          textEditor.findMaxNumberOfSentencesWithSameWord();
 
-        //textEditor.Task5();
-       // textEditor.printText();
-       // textEditor.printText();
+       // functionality 2
+        textEditor.sortSentences(new NumberOfWordsInSentenceComparator()).forEach(System.out::println);
 
+        // functionality 4
+        textEditor.printWordsWithLengthFromInterrogativeSentences(4);
 
-         textEditor.sortSentences(new NumberOfWordsInSentenceComparator());
+        // functionality 5
+       // textEditor.swapFirstLastWordInSentence();
+
+        textEditor.printText();
+        //textEditor.getFullText().forEach(Text::print);
+       //textEditor.getAllWords().stream().sorted(new WordComparator()).forEach(System.out::println);
     }
 }

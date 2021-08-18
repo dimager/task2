@@ -1,9 +1,11 @@
 package com.epam.jwd.service;
 
+import com.epam.jwd.Main;
+import com.epam.jwd.comparator.NumberOfWordsInSentenceComparator;
 import com.epam.jwd.domain.Paragraph;
 import com.epam.jwd.domain.Sentence;
 import com.epam.jwd.domain.Text;
-import com.epam.jwd.domain.Word;
+import com.epam.jwd.domain.ContentWord;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,20 +13,19 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class TextEditor {
-    private final String specialWords = "of the in by on at by a up an to it as from for are is";
     private List<Text> fullText = new LinkedList<>();
-    private List<Sentence> allSentences = new LinkedList<>();
-    private HashSet<Text> allWords = new HashSet<>();
-    private HashSet<String> allWordsString = new HashSet<>();
+    private final List<Sentence> allSentences = new LinkedList<>();
+    private final HashSet<Text> allWords = new HashSet<>();
+    private final HashSet<Text> allContentWords = new HashSet<>();
 
     public void loadElements(List<Text> list) {
         this.fullText = list;
         loadAllSentences();
         loadAllWords();
+        loadContentWords();
     }
 
     public void printText() {
@@ -32,114 +33,88 @@ public class TextEditor {
     }
 
     private void loadAllSentences() {
-        allSentences.clear();
-        for (Text text : fullText) {
-            if (text instanceof Paragraph) {
-                allSentences.addAll(((Paragraph) text).getSentencesFromParagraph());
-            }
-        }
+        fullText.stream().filter(textElement -> textElement instanceof Paragraph).map(textElement -> ((Paragraph) textElement).getSentencesFromParagraph()).forEach(allSentences::addAll);
     }
-
     private void loadAllWords() {
-        for (Sentence sentence : allSentences) {
-            allWords.addAll(sentence.getSentenceWordsList());
-        }
-        allWordsString.addAll(allWords.stream().map(Text::getValue).map(String::toLowerCase).collect(Collectors.toList()));
+        allSentences.stream().map(Sentence::getAllWords).forEach(allWords::addAll);
+    }
+    private void loadContentWords(){
+        allSentences.stream().map(Sentence::getContentWords).forEach(allContentWords::addAll);
     }
 
-    public void sortSentences(Comparator<Sentence> textComparator) {
-        //allSentences.stream().sorted(textComparator).forEach(text -> System.out.println(text.getSentenceString()));
-        allSentences.stream().sorted(textComparator).forEach(Sentence::print);
+    public List<Text> getFullText() {
+        return fullText;
     }
-
     public List<Sentence> getAllSentences() {
         return allSentences;
     }
-
-    public HashSet<String> getAllWords() {
-        return allWordsString;
+    public HashSet<Text> getAllWords() {
+        return allWords;
+    }
+    public HashSet<Text> getAllContentWords() {
+        return allContentWords;
     }
 
-    public void Task1() {
-        HashMap<String, Sentence> hashMap = new HashMap<>();
-        int hit;
-        int max = 0;
-        for (String s : allWordsString) {
-            if (!specialWords.contains(s) & s.length() > 1) {
-                for (Sentence sentence : allSentences) {
-                    hit = 0;
-                    for (Text sentenceWord : sentence.getSentenceWordsList()) {
-                        if (sentenceWord.getValue().toLowerCase(Locale.ROOT).equals(s.toLowerCase(Locale.ROOT))) {
-                            hit++;
-                            if (hit > 0) {
-                                if (max < hit) {
-                                    max = hit;
-                                    hashMap.clear();
-                                    hashMap.put(s, sentence);
-                                } else if (max == hit) {
-                                    hashMap.put(s, sentence);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        System.out.println(max);
-        hashMap.forEach((s, sentence) -> System.out.println("Word: " + s + "\nSentence: " + sentence.getSentenceString()));
-    }
 
-    public void Task1a() {
-        List<Sentence> temporaryList = new LinkedList<>();
-        List<Sentence> sentencesWithWord = new LinkedList<>();
-        String word = "";
-        String s;
-        Iterator<String> wordsIterator = allWordsString.iterator();
+
+    public void findMaxNumberOfSentencesWithSameWord() {
+        Main.logger.info("Task1");
+        List<Sentence> temporarySentences = new LinkedList<>();
+        HashSet<Sentence> sentencesWithWord = new HashSet<>();
+        HashMap<ContentWord,Integer>  words = new HashMap<>();
+        Iterator<Text> wordsIterator = allContentWords.iterator();
+        Text checkedWord;
         while (wordsIterator.hasNext()) {
-            s = wordsIterator.next();
+            checkedWord = wordsIterator.next();
             Iterator<Sentence> sentenceIterator = allSentences.iterator();
             while (sentenceIterator.hasNext()) {
                 Sentence checkSentence = sentenceIterator.next();
-                if (checkSentence.isContainWord(s) & !specialWords.contains(s) & s.length() > 1) {
-                    temporaryList.add(checkSentence);
+                if (checkSentence.isContainWord(checkedWord)) {
+                    temporarySentences.add(checkSentence);
                 }
             }
-            if (temporaryList.size() > sentencesWithWord.size()) {
-                word = s;
+            if (temporarySentences.size() > sentencesWithWord.size()) {
+                words.clear();
                 sentencesWithWord.clear();
-                sentencesWithWord.addAll(temporaryList);
+                words.put((ContentWord) checkedWord,temporarySentences.size());
+                sentencesWithWord.addAll(temporarySentences);
             }
-            temporaryList.clear();
+            else if (temporarySentences.size() == sentencesWithWord.size()){
+                words.put((ContentWord) checkedWord,temporarySentences.size());
+                sentencesWithWord.addAll(temporarySentences);
+            }
+            temporarySentences.clear();
         }
-        System.out.println(word);
-        System.out.println(sentencesWithWord.size());
-        sentencesWithWord.forEach(sentence -> System.out.println(sentence.getSentenceString()));
+        words.forEach((contentWord, numberOfSentences) -> System.out.println("Word - " + contentWord + "\nNumber of sentences: " + numberOfSentences ));
+        System.out.println("Total number of sentences: " + sentencesWithWord.size() + "\n");
+        sentencesWithWord.stream().sorted(new NumberOfWordsInSentenceComparator()).forEach(System.out::println);
     }
-
-    public void Task3() {
-        System.out.println(allSentences.iterator());
+    public List<Text> sortSentences(Comparator<Sentence> sentenceComparator) {
+        Main.logger.info("Sorting sentences (for task2)");
+        return allSentences.stream().sorted(sentenceComparator).collect(Collectors.toList());
     }
-
-    public void Task4(int wordSize) {
+    public void printWordsWithLengthFromInterrogativeSentences(int wordSize) {
+        Main.logger.info("Task4");
         Iterator<Sentence> sentenceIterator = allSentences.listIterator();
+        System.out.println("Size of word=" + wordSize + "\nSentence: ");
         while (sentenceIterator.hasNext()) {
             Sentence sentence = sentenceIterator.next();
-            if (sentence.getSentenceString().endsWith("?")) {
-                System.out.print("Size of word=" + wordSize + "\nSentence: ");
+            if (sentence.toString().endsWith("?")) {
                 sentence.print();
                 System.out.println("\nWord(s): ");
-                Iterator<Text> wordIterator = sentence.getSentenceWordsList().listIterator();
+                Iterator<Text> wordIterator = sentence.getAllWords().listIterator();
                 while (wordIterator.hasNext()) {
                     Text word = wordIterator.next();
                     if (word.getValue().length() == wordSize) {
                         word.print();
+                        System.out.print(" ");
                     }
                 }
             }
         }
     }
-
-    public void Task5() {
+    public void swapFirstLastWordInSentence() {
+        Main.logger.info("Task5");
         Iterator<Text> fullTextIterator = fullText.listIterator();
         while (fullTextIterator.hasNext()) {
             Text text = fullTextIterator.next();
@@ -147,10 +122,9 @@ public class TextEditor {
                 Iterator<Sentence> sentenceIterator = ((Paragraph) text).getSentencesFromParagraph().iterator();
                 while (sentenceIterator.hasNext()) {
                     Sentence sentence = sentenceIterator.next();
-                    Word firstWord = (Word) sentence.getSentenceWordsList().get(0);
-                    Word lastWord = (Word) sentence.getSentenceWordsList().get(sentence.getNumberOfWordsInSentence() - 1);
+                    ContentWord firstWord = (ContentWord) sentence.getAllWords().get(0);
+                    ContentWord lastWord = (ContentWord) sentence.getAllWords().get(sentence.getNumberOfWordsInSentence() - 1);
                     sentence.swapFirstLastWord(firstWord, lastWord);
-                    //  sentence.print();
                 }
             }
         }

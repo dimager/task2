@@ -1,63 +1,60 @@
 package com.epam.jwd.domain;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class Sentence extends BaseText {
-    List<Text> sentenceElements = new LinkedList<>();
+    private List<Text> sentenceElements = new LinkedList<>();
 
     public void add(Text sentenceElement) {
         this.sentenceElements.add(sentenceElement);
     }
+
     public void remove(Text sentenceElement) {
         this.sentenceElements.remove(sentenceElement);
     }
 
-    public String getSentenceString(){
-        StringBuilder builder = new StringBuilder();
-        sentenceElements.forEach(text -> builder.append(text.getValue()));
-        return builder.toString();
-    }
-
-    public int getSentenceLength(){
+    public int getSentenceLength() {
         return sentenceElements.size();
     }
 
-    public int getNumberOfWordsInSentence(){
-        return  getSentenceWordsList().size();
+    public int getNumberOfWordsInSentence() {
+//        return getContentWords().size();
+        return getAllWords().size();
     }
 
-    public List<Text> getSentenceWordsList() {
-        return sentenceElements.stream().filter(text -> text instanceof Word).collect(Collectors.toList());
+    public List<Text> getAllWords() {
+        return sentenceElements.stream().filter(word -> word instanceof ContentWord || word instanceof FunctionWord).collect(Collectors.toList());
     }
 
-    public void swapFirstLastWord(Word firstWord, Word lastWord){
+    public List<Text> getContentWords() {
+        return sentenceElements.stream().filter(word -> word instanceof ContentWord).collect(Collectors.toList());
+    }
+
+    public void swapFirstLastWord(ContentWord firstWord, ContentWord lastWord) {
         int indexOfFirstWord = sentenceElements.indexOf(firstWord);
         int indexOfLastWord = sentenceElements.lastIndexOf(lastWord);
         sentenceElements.remove(indexOfFirstWord);
-        sentenceElements.add(indexOfFirstWord,lastWord);
+        sentenceElements.add(indexOfFirstWord, lastWord);
         sentenceElements.remove(indexOfLastWord);
-        sentenceElements.add(indexOfLastWord,firstWord);
+        sentenceElements.add(indexOfLastWord, firstWord);
     }
 
-    public boolean isContainWord(String word){
-        for (Text text : getSentenceWordsList()) {
-            if (text.getValue().toLowerCase(Locale.ROOT).contains(word)) {
+    public boolean isContainWord(Text word) {
+        for (Text sentenceWords : getContentWords()) {
+            if (sentenceWords.getValue().equalsIgnoreCase(word.getValue())) {
                 return true;
             }
         }
         return false;
-        //return getSentenceWordsList().forEach();
-       // return getSentenceString().toLowerCase().contains(word);
     }
 
     @Override
     public void print() {
-        sentenceElements.forEach(sentenceElement -> System.out.print(sentenceElement.getValue()));
+        sentenceElements.forEach(Text::print);
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -73,5 +70,12 @@ public class Sentence extends BaseText {
         int result = super.hashCode();
         result = 31 * result + (sentenceElements != null ? sentenceElements.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sentence = new StringBuilder();
+        sentenceElements.forEach(text -> sentence.append(text.getValue()));
+        return sentence.toString();
     }
 }

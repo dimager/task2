@@ -186,9 +186,6 @@ public static void main(String[] args) {
     System.out.println(time);
 }
 
-The output will look something like:
-
-Time@80cc7c0
 
 When Java displays the value of an object type, it displays the name of the type and the address of the object (in hexadecimal). This address can be useful for debugging, if you want to keep track of individual objects.
 

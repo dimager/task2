@@ -1,7 +1,7 @@
 package com.epam.jwd.domain;
 
-public class Number extends BaseText {
-    public Number(String value) {
+public class FunctionWord extends BaseText {
+    public FunctionWord(String value) {
         super(value);
     }
 

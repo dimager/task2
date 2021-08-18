@@ -1,6 +1,6 @@
 package com.epam.jwd.domain;
 
-public class CodeBlock extends BaseText{
+public class CodeBlock extends BaseText {
     public CodeBlock(String value) {
         super(value);
     }
@@ -10,4 +10,8 @@ public class CodeBlock extends BaseText{
         System.out.println(getValue());
     }
 
+    @Override
+    public String toString() {
+        return getValue();
+    }
 }

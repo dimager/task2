@@ -1,13 +1,13 @@
 package com.epam.jwd.domain;
 
-public class Word extends BaseText {
-    public Word(String value) {
+public class ContentWord extends BaseText {
+    public ContentWord(String value) {
         super(value);
     }
 
     @Override
     public void print() {
-        System.out.println(getValue());
+        System.out.print(getValue());
     }
 
     @Override

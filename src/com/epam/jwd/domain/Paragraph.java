@@ -4,24 +4,24 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Paragraph extends BaseText {
-    List<Sentence> sentences = new LinkedList<>();
+    List<Sentence> paragraphSentences = new LinkedList<>();
 
     @Override
     public void print() {
-        sentences.forEach(Sentence::print);
+        paragraphSentences.forEach(Sentence::print);
         System.out.println();
     }
 
     public void add(Text sentence) {
-        sentences.add((Sentence) sentence);
+        paragraphSentences.add((Sentence) sentence);
     }
 
     public void remove(Text sentence) {
-        sentences.remove((Sentence) sentence);
+        paragraphSentences.remove((Sentence) sentence);
     }
 
     public List<Sentence> getSentencesFromParagraph() {
-        return sentences;
+        return paragraphSentences;
     }
 
     @Override
@@ -30,13 +30,13 @@ public class Paragraph extends BaseText {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Paragraph paragraph = (Paragraph) o;
-        return sentences != null ? sentences.equals(paragraph.sentences) : paragraph.sentences == null;
+        return paragraphSentences != null ? paragraphSentences.equals(paragraph.paragraphSentences) : paragraph.paragraphSentences == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (sentences != null ? sentences.hashCode() : 0);
+        result = 31 * result + (paragraphSentences != null ? paragraphSentences.hashCode() : 0);
         return result;
     }
 }

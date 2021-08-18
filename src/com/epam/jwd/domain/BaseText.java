@@ -1,5 +1,4 @@
 package com.epam.jwd.domain;
-import java.util.List;
 
 public abstract class BaseText implements Text {
     private String value;
@@ -11,13 +10,12 @@ public abstract class BaseText implements Text {
     public BaseText() {
     }
 
-    @Override
-    public abstract void print();
-
-    @Override
     public String getValue() {
         return this.value;
     }
+
+    @Override
+    public abstract void print();
 
     @Override
     public boolean equals(Object o) {
