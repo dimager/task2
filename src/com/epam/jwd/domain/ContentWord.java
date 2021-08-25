@@ -1,6 +1,6 @@
 package com.epam.jwd.domain;
 
-public class ContentWord extends BaseText {
+public class ContentWord extends BaseText{
     public ContentWord(String value) {
         super(value);
     }
@@ -14,4 +14,6 @@ public class ContentWord extends BaseText {
     public String toString() {
         return getValue();
     }
+
+
 }

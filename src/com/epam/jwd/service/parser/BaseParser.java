@@ -1,15 +1,15 @@
-package com.epam.jwd.service;
+package com.epam.jwd.service.parser;
 
 import com.epam.jwd.domain.Text;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Parser {
-    private Parser next;
+public abstract class BaseParser {
+    private BaseParser next;
     private List<Text> list = new LinkedList<>();
 
-    public Parser linkWith(Parser next){
+    public BaseParser linkWith(BaseParser next){
         this.next = next;
         return next;
     }
@@ -21,4 +21,5 @@ public abstract class Parser {
         }
         return next.split(text);
     }
+
 }

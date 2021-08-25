@@ -6,12 +6,6 @@ import java.util.List;
 public class Paragraph extends BaseText {
     List<Sentence> paragraphSentences = new LinkedList<>();
 
-    @Override
-    public void print() {
-        paragraphSentences.forEach(Sentence::print);
-        System.out.println();
-    }
-
     public void add(Text sentence) {
         paragraphSentences.add((Sentence) sentence);
     }
@@ -22,6 +16,12 @@ public class Paragraph extends BaseText {
 
     public List<Sentence> getSentencesFromParagraph() {
         return paragraphSentences;
+    }
+
+    @Override
+    public void print() {
+        paragraphSentences.forEach(Sentence::print);
+        System.out.println();
     }
 
     @Override

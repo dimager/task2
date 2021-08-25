@@ -20,41 +20,37 @@ public class Sentence extends BaseText {
     }
 
     public int getNumberOfWordsInSentence() {
-//        return getContentWords().size();
         return getAllWords().size();
+    }
+    public int getNumberOfContentWordsInSentence() {
+        return getContentWords().size();
     }
 
     public List<Text> getAllWords() {
-        return sentenceElements.stream().filter(word -> word instanceof ContentWord || word instanceof FunctionWord).collect(Collectors.toList());
+        return sentenceElements.stream()
+                .filter(word -> word instanceof ContentWord || word instanceof FunctionWord)
+                .collect(Collectors.toList());
     }
 
     public List<Text> getContentWords() {
-        return sentenceElements.stream().filter(word -> word instanceof ContentWord).collect(Collectors.toList());
+        return sentenceElements.stream()
+                .filter(word -> word instanceof ContentWord)
+                .collect(Collectors.toList());
     }
 
-    public void swapFirstLastWord(ContentWord firstWord, ContentWord lastWord) {
-        int indexOfFirstWord = sentenceElements.indexOf(firstWord);
-        int indexOfLastWord = sentenceElements.lastIndexOf(lastWord);
-        sentenceElements.remove(indexOfFirstWord);
-        sentenceElements.add(indexOfFirstWord, lastWord);
-        sentenceElements.remove(indexOfLastWord);
-        sentenceElements.add(indexOfLastWord, firstWord);
+    public List<Text> getSentenceElements() {
+        return sentenceElements;
     }
 
     public boolean isContainWord(Text word) {
-        for (Text sentenceWords : getContentWords()) {
-            if (sentenceWords.getValue().equalsIgnoreCase(word.getValue())) {
-                return true;
-            }
-        }
-        return false;
+        return getContentWords().stream()
+                .anyMatch(sentenceWords -> sentenceWords.getValue().equalsIgnoreCase(word.getValue()));
     }
 
     @Override
     public void print() {
         sentenceElements.forEach(Text::print);
     }
-
 
     @Override
     public boolean equals(Object o) {
