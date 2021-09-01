@@ -6,6 +6,8 @@ import com.epam.jwd.domain.Sentence;
 import com.epam.jwd.domain.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -154,25 +156,15 @@ public class TextEditor {
                 Iterator<Sentence> sentenceIterator = ((Paragraph) text).getSentencesFromParagraph().iterator();
                 while (sentenceIterator.hasNext()) {
                     Sentence sentence = sentenceIterator.next();
-                    Text firstWord =  sentence.getAllWords().get(0);
-                    Text lastWord =  sentence.getAllWords().get(sentence.getNumberOfWordsInSentence() - 1);
-                    swapFirstLastWord(sentence,firstWord, lastWord);
+                    logger.info(SWAP_FIRST_LAST_MESSAGE);
+                    logger.info(sentence);
+                    Collections.swap(sentence.getSentenceElements(),
+                            sentence.getSentenceElements().indexOf(sentence.getAllWords().get(0)),
+                            sentence.getSentenceElements().lastIndexOf(sentence.getAllWords().get(sentence.getNumberOfWordsInSentence()-1)));
+                    logger.info(sentence);
                 }
             }
         }
-    }
-
-    private void swapFirstLastWord(Sentence sentence, Text firstWord, Text lastWord) {
-        logger.info(SWAP_FIRST_LAST_MESSAGE);
-        logger.info(sentence);
-        int indexOfFirstWord = sentence.getSentenceElements().indexOf(firstWord);
-        int indexOfLastWord = sentence.getSentenceElements().lastIndexOf(lastWord);
-        sentence.getSentenceElements().remove(indexOfFirstWord);
-        sentence.getSentenceElements().add(indexOfFirstWord, lastWord);
-        sentence.getSentenceElements().remove(indexOfLastWord);
-        sentence.getSentenceElements().add(indexOfLastWord, firstWord);
-        logger.info(sentence);
-
     }
 
     public void sortWordsByLetterFrequency(String value) {
